@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from core.sets import is_disjoint
 from draft_kings.nba.models.contests.salary_cap.player_pool.player import Player as PlayerPoolPlayer
@@ -66,6 +67,50 @@ class InvalidUtilityPosition(InvalidLineupError):
            unsafe_hash=False,
            frozen=True)
 class Lineup:  # pylint: disable=too-many-instance-attributes
+
+    dataclass(init=True,
+              repr=True,
+              eq=True,
+              order=False,
+              unsafe_hash=False,
+              frozen=True)
+
+    class Builder:
+        point_guard: Optional[PlayerPoolPlayer]
+        shooting_guard: Optional[PlayerPoolPlayer]
+        small_forward: Optional[PlayerPoolPlayer]
+        power_forward: Optional[PlayerPoolPlayer]
+        center: Optional[PlayerPoolPlayer]
+        guard: Optional[PlayerPoolPlayer]
+        forward: Optional[PlayerPoolPlayer]
+        utility: Optional[PlayerPoolPlayer]
+        salary: float
+
+        def set_point_guard(self, point_guard: PlayerPoolPlayer) -> None:
+            if self.point_guard is None:
+                raise ValueError()
+
+            if Position.POINT_GUARD not in point_guard.positions:
+                raise InvalidPointGuardPosition()
+
+            if 50_000 < (point_guard.salary + self.salary):
+                raise MustNotExceedTheSalaryCap()
+
+            self.point_guard = point_guard
+            self.salary += point_guard.salary
+
+        def build(self) -> Lineup:
+            return Lineup(
+                point_guard=self.point_guard,
+                shooting_guard=self.shooting_guard,
+                small_forward=self.small_forward,
+                power_forward=self.power_forward,
+                center=self.center,
+                guard=self.guard,
+                forward=self.forward,
+                utility=self.utility
+            )
+
     # G (PG,SG)
     GUARD_POSITIONS = {
         Position.POINT_GUARD,
