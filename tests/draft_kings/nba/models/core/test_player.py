@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from .player import Player, InvalidIdError, InvalidNameError
+from daily_fantasy_sports_models.draft_kings.nba.models.core.player import Player, InvalidIdError, InvalidNameError
 
 
 class TestPlayer(TestCase):
