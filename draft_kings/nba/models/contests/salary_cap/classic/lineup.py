@@ -23,35 +23,7 @@ class MustNotExceedTheSalaryCap(InvalidLineupError):
     pass
 
 
-class InvalidPointGuardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidShootingGuardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidSmallForwardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidPowerForwardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidCenterPosition(InvalidLineupError):
-    pass
-
-
-class InvalidGuardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidForwardPosition(InvalidLineupError):
-    pass
-
-
-class InvalidUtilityPosition(InvalidLineupError):
+class InvalidPlayerPosition(InvalidLineupError):
     pass
 
 
@@ -66,24 +38,33 @@ class InvalidUtilityPosition(InvalidLineupError):
            unsafe_hash=False,
            frozen=True)
 class Lineup:  # pylint: disable=too-many-instance-attributes
-    # G (PG,SG)
-    GUARD_POSITIONS = {
-        Position.POINT_GUARD,
+
+    POINT_GUARD_POSITIONS = frozenset({
+        Position.POINT_GUARD
+    })
+
+    SHOOTING_GUARD_POSITIONS = frozenset({
         Position.SHOOTING_GUARD
-    }
-    # F (SF, PF)
-    FORWARD_POSITIONS = {
-        Position.SMALL_FORWARD,
+    })
+
+    SMALL_FORWARD_POSITIONS = frozenset({
         Position.SMALL_FORWARD
-    }
-    # Util (PG,SG,SF,PF,C)
-    UTILITY_POSITIONS = {
-        Position.POINT_GUARD,
-        Position.SHOOTING_GUARD,
-        Position.SMALL_FORWARD,
-        Position.POWER_FORWARD,
+    })
+
+    POWER_FORWARD_POSITIONS = frozenset({
+        Position.POWER_FORWARD
+    })
+
+    CENTER_POSITIONS = frozenset({
         Position.CENTER
-    }
+    })
+
+    # G (PG,SG)
+    GUARD_POSITIONS = POINT_GUARD_POSITIONS.union(SHOOTING_GUARD_POSITIONS)
+    # F (SF, PF)
+    FORWARD_POSITIONS = SMALL_FORWARD_POSITIONS.union(POWER_FORWARD_POSITIONS)
+    # Util (PG,SG,SF,PF,C)
+    UTILITY_POSITIONS = GUARD_POSITIONS.union(FORWARD_POSITIONS.union(CENTER_POSITIONS))
 
     point_guard: PlayerPoolPlayer
     shooting_guard: PlayerPoolPlayer
@@ -130,26 +111,15 @@ class Lineup:  # pylint: disable=too-many-instance-attributes
         ):
             raise MustNotExceedTheSalaryCap()
 
-        if Position.POINT_GUARD not in self.point_guard.positions:
-            raise InvalidPointGuardPosition()
-
-        if Position.SHOOTING_GUARD not in self.shooting_guard.positions:
-            raise InvalidShootingGuardPosition()
-
-        if Position.SMALL_FORWARD not in self.small_forward.positions:
-            raise InvalidSmallForwardPosition()
-
-        if Position.POWER_FORWARD not in self.power_forward.positions:
-            raise InvalidPowerForwardPosition()
-
-        if Position.CENTER not in self.center.positions:
-            raise InvalidCenterPosition()
-
-        if is_disjoint(self.guard.positions, Lineup.GUARD_POSITIONS):
-            raise InvalidGuardPosition()
-
-        if is_disjoint(self.forward.positions, Lineup.FORWARD_POSITIONS):
-            raise InvalidForwardPosition()
-
-        if is_disjoint(self.utility.positions, Lineup.UTILITY_POSITIONS):
-            raise InvalidUtilityPosition()
+        for eligible_positions, player in {
+            Lineup.POINT_GUARD_POSITIONS: self.point_guard,
+            Lineup.SHOOTING_GUARD_POSITIONS: self.shooting_guard,
+            Lineup.SMALL_FORWARD_POSITIONS: self.small_forward,
+            Lineup.POWER_FORWARD_POSITIONS: self.power_forward,
+            Lineup.CENTER_POSITIONS: self.center,
+            Lineup.GUARD_POSITIONS: self.guard,
+            Lineup.FORWARD_POSITIONS: self.forward,
+            Lineup.UTILITY_POSITIONS: self.utility
+        }.items():
+            if is_disjoint(eligible_positions, player.positions):
+                raise InvalidPlayerPosition()
