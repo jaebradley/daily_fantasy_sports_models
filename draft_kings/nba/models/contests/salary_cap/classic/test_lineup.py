@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from draft_kings.nba.models.contests.salary_cap.classic.lineup import Lineup, DuplicatePlayerError, InvalidPlayerPosition
+from draft_kings.nba.models.contests.salary_cap.classic.lineup import Lineup, DuplicatePlayerError, \
+    InvalidPlayerPosition
 from draft_kings.nba.models.contests.salary_cap.player_pool.player import Player as PlayerPoolPlayer
 from draft_kings.nba.models.core.player import Player
 from draft_kings.nba.models.core.position import Position
@@ -160,4 +161,3 @@ class TestLineup(TestCase):
                     salary=8
                 )
             )
-
