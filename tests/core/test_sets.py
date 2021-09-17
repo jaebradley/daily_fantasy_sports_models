@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from .sets import is_disjoint
+from daily_fantasy_sports_models.core.sets import is_disjoint
 
 
 class TestSets(TestCase):

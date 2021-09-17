@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from draft_kings.nba.models.contests.salary_cap.player_pool.player import Player as ContestPlayer, \
-    InvalidGameIdError, PositionsCannotBeEmptyError
-from draft_kings.nba.models.core.player import Player
-from draft_kings.nba.models.core.position import Position
+from daily_fantasy_sports_models.draft_kings.nba.models.contests.salary_cap.player_pool.player import Player as \
+    ContestPlayer, InvalidGameIdError, PositionsCannotBeEmptyError
+from daily_fantasy_sports_models.draft_kings.nba.models.core.player import Player
+from daily_fantasy_sports_models.draft_kings.nba.models.core.position import Position
 
 
 class TestPlayer(TestCase):

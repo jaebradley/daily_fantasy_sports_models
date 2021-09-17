@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
-from core.sets import is_disjoint
-from draft_kings.nba.models.contests.salary_cap.player_pool.player import Player as PlayerPoolPlayer
-from draft_kings.nba.models.core.position import Position
+from daily_fantasy_sports_models.core.sets import is_disjoint
+from daily_fantasy_sports_models.draft_kings.nba.models.contests.salary_cap.player_pool.player import Player \
+    as PlayerPoolPlayer
+from daily_fantasy_sports_models.draft_kings.nba.models.core.position import Position
 
 
 class InvalidLineupError(ValueError):

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Set
 
-from draft_kings.nba.models.core.player import Player as CorePlayer
-from draft_kings.nba.models.core.position import Position
+from daily_fantasy_sports_models.draft_kings.nba.models.core.player import Player as CorePlayer
+from daily_fantasy_sports_models.draft_kings.nba.models.core.position import Position
 
 
 class InvalidPlayerError(ValueError):
